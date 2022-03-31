@@ -1,6 +1,15 @@
+import datetime
+import logging
 import os
+import ssl
 
 from flask import Flask
+import sqlalchemy
+from sqlalchemy.ext.serializer import loads, dumps
+
+from db import db
+
+logger = logging.getLogger()
 
 app = Flask(__name__)
 
@@ -9,6 +18,13 @@ app = Flask(__name__)
 def hello_world():
     name = os.environ.get("NAME", "World")
     return "Bye {}!".format(name)
+
+@app.route("/all")
+def all_art():
+    with db.connect() as conn:
+        all_art = conn.execute("SELECT * from art_details").fetchall()
+    logger.info("Query all art: %s", all_art)
+    return dumps(all_art)
 
 
 if __name__ == "__main__":
