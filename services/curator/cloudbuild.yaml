@@ -1,0 +1,37 @@
+steps:
+  # Pull last build for caching
+  - name: "gcr.io/cloud-builders/docker"
+    entrypoint: "bash"
+    args: ["-c", "docker pull gcr.io/$PROJECT_ID/curator:latest || exit 0"]
+  # Build new image
+  - name: "gcr.io/cloud-builders/docker"
+    args:
+      [
+        "build",
+        "-t",
+        "gcr.io/$PROJECT_ID/curator",
+        "--cache-from",
+        "gcr.io/$PROJECT_ID/curator:latest",
+        "${_PATH}",
+      ]
+  # Push new image
+  - name: "gcr.io/cloud-builders/docker"
+    args: ["push", "gcr.io/$PROJECT_ID/curator"]
+  # Deploy to Cloud Run
+  - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
+    args:
+      [
+        "run",
+        "deploy",
+        "curator",
+        "--image",
+        "gcr.io/$PROJECT_ID/curator",
+        "--region",
+        "us-central1",
+      ]
+
+substitutions:
+  _PATH: .
+
+images:
+  - "gcr.io/$PROJECT_ID/curator"
