@@ -6,6 +6,7 @@ import ssl
 from flask import Flask
 import sqlalchemy
 from sqlalchemy.ext.serializer import loads, dumps
+import json
 
 from db import db
 
@@ -24,7 +25,7 @@ def all_art():
     with db.connect() as conn:
         all_art = conn.execute("SELECT * from art_details").fetchall()
     logger.info("Query all art: %s", all_art)
-    return dumps(all_art)
+    return return json.dumps([dict(r) for r in all_art])
 
 
 if __name__ == "__main__":
