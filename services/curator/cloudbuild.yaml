@@ -9,6 +9,8 @@ steps:
         "build",
         "-t",
         "gcr.io/$PROJECT_ID/curator",
+        "-f",
+        "services/curator/Dockerfile",
         # "--cache-from",
         # "gcr.io/$PROJECT_ID/curator:latest",
         "${_PATH}",
