@@ -25,7 +25,7 @@ def all_art():
     with db.connect() as conn:
         all_art = conn.execute("SELECT * from art_details").fetchall()
     logger.info("Query all art: %s", all_art)
-    return return json.dumps([dict(r) for r in all_art])
+    return json.dumps([dict(r) for r in all_art])
 
 
 if __name__ == "__main__":
